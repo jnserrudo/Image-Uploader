@@ -17,7 +17,7 @@ export default function Home() {
 
         //creamos una propiedad que en este caso le ponemos file por ejemplo y le pasamos el estado que almacena el archivo
         formData.append('file',file)
-        const res=await fetch('./api/upload',{
+        const res=await fetch('./api/upload',{ 
           method:'POST',
           body:formData,
           

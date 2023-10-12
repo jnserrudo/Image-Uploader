@@ -7,14 +7,21 @@ import path, { resolve } from "node:path"
 //luego lo importamos y luego lo configuramos
 import {v2 as cloudinary} from 'cloudinary';
           
-require('dotenv').config();
+//require('dotenv').config();
 
 console.log(process.env.APIKEY,process.env.APISECRET)
 cloudinary.config({ 
-  cloud_name: 'dhqok7v4a', 
-  api_key:process.env.APIKEY.toString(), 
-  api_secret: process.env.APISECRET.toString() 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key:process.env.APIKEY,
+  api_secret: process.env.APISECRET 
 });
+
+
+/*
+PODEMOS CREAR RUTAS QUE PROCESEN CODIGO DE BACKEND, PARA ESTO ES BASTANTE COMUN TENER UNA CARPETA LLAMADA API, DENTRO DE LA CUAL
+TENEMOS UNA CARPETA PARA CADA RUTA, EN ESTE CASO UNA LLAMADA UPLOAD, PARA CADA UNA RUTA, SE CREA UN ARCHIVO route.js, ESTOS
+HACEN REFERENCIA A RUTAS DE BACKEND
+*/
 
 export const POST= async(request)=>{
     //SE RECIBIRA UNA FORMULARIO
@@ -53,19 +60,25 @@ export const POST= async(request)=>{
     //creada al usar el writeline y lo sube a cloudinary
     //const res= await cloudinary.uploader.upload(direccionArchivo)
     //console.log(res)
+    //ES DECIR SUBE UN ARCHIVO QUE SE TENGA YA GUARDADO, EN ESTE CASO SUBE UN ARCHIVO QUE ACABAMOS DE CREAR CON EL WRITELINE 
     
-    //AHORA SE USARA OTRO METODO, DIRECTAMENTE SE LO SUBE AL BUFFER, YA NO SE LO CREA PARA TOMAR SU DIRECCION DEL ARCHIVO Y LUEGO SUBIRLO
+
+
+    //AHORA SE USARA OTRO METODO, DIRECTAMENTE SE SUBE AL BUFFER QUE ESTA EN MEMORIA, YA NO SE LO CREA PARA TOMAR SU DIRECCION DEL ARCHIVO Y LUEGO SUBIRLO
 
     const res=await new Promise((resolve,reject)=>{
     
+      //ESTE UPLOAD STREAM ES PARA ENVIARLE DATOS DE A POCO EN FORMATO CRUDO Y LO SIGUIENTE ES QUE SE PUEDE AGREGAR UN TIPO O OBJETO DE CONFIGURACION 
       cloudinary.uploader.upload_stream({
 //objeto de configuracion, no se uso
       },(err,result)=>{
         !err?resolve(result):reject(err)
       }).end(buffer)
+      //LA IMAGEN SE SUBE AL FINAL, PARA ESTO SE TIENE QUE ESPERAR A QUE TODO ESTO TERMINE 
   
     })
-    
+    //GRACIAS A LO QUE SE REALIZA EN LA PROMESA PODEMOS OBTENER UNA RESPUESTA DE LA SUBIDA A CLOUDINARY SIN CREAR O ALMACENAR UN ARCHIVO
+
     console.log(data.get('file'))
     return NextResponse.json({
       message:"imagen subida",
